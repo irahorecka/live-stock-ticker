@@ -29,25 +29,6 @@ def get_sp500():
     return float(sp500_trim), int(_time)
 
 
-def update_plot_data(self):
-    """Update plot realtime"""
-    sp500, _time = get_sp500()
-    self.x = self.x[1:]  # Remove the first y element.
-    self.x.append(self.x[-1] + _time)  # Add a new value 1 higher than the last.
-
-    self.y = self.y[1:]  # Remove the first 
-    old_price = self.y[-1]
-    self.y.append(sp500)  # Add new sp500 price
-    # set label in graph
-    self.data_line.setData(self.x, self.y)  # Update the data.
-    if sp500 > old_price:
-        self.graphWidget.setLabel('top', f'sp500: {self.y[-1]}', color='forestgreen')
-    elif sp500 == old_price:
-        self.graphWidget.setLabel('top', f'sp500: {self.y[-1]}', color='orange')
-    else:
-        self.graphWidget.setLabel('top', f'sp500: {self.y[-1]}', color='red')
-
-
 class MainWindow(QtWidgets.QMainWindow):
     """Main application window for display and init graphing.
     User update_plot_data to live update this window"""
@@ -87,6 +68,23 @@ class MainWindow(QtWidgets.QMainWindow):
         self.timer.timeout.connect(self.update_plot_data)
         self.timer.start()
 
+    def update_plot_data(self):
+        """Update plot realtime"""
+        sp500, _time = get_sp500()
+        self.x = self.x[1:]  # Remove the first y element.
+        self.x.append(self.x[-1] + _time)  # Add a new value 1 higher than the last.
+
+        self.y = self.y[1:]  # Remove the first 
+        old_price = self.y[-1]
+        self.y.append(sp500)  # Add new sp500 price
+        # set label in graph
+        self.data_line.setData(self.x, self.y)  # Update the data.
+        if sp500 > old_price:
+            self.graphWidget.setLabel('top', f'sp500: {self.y[-1]}', color='forestgreen')
+        elif sp500 == old_price:
+            self.graphWidget.setLabel('top', f'sp500: {self.y[-1]}', color='orange')
+        else:
+            self.graphWidget.setLabel('top', f'sp500: {self.y[-1]}', color='red')
 
 def main():
     """Start app instance with proper exit"""
